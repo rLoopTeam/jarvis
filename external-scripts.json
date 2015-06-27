@@ -10,5 +10,9 @@
   "hubot-rules",
   "hubot-shipit",
   "hubot-alias",
-  "hubot-voting"
+  "hubot-voting",
+  "hubot-business-cat",
+  "hubot-factoids",
+  "hubot-seen",
+  "hubot-tell"
 ]
