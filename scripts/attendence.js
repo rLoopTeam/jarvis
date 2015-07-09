@@ -34,11 +34,6 @@ module.exports = function(robot) {
 		console.log(msg.envelope.user);
 	});
 
-	robot.respond(/repl/i, function(msg) {
-		var r = require('repl').start({})
-		r.context.t = this;
-	})
-
 	checkAttendence(robot, false);
 }
 
