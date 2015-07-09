@@ -31,6 +31,7 @@ module.exports = function(robot) {
 	robot.hear(/[\s\S]*/, function(msg){
 		console.log(msg);
 		msg.envelope.user.lastSeen = new Date().setHours(24, 0, 0, 0);
+		console.log(msg.envelope.user);
 	});
 
 	checkAttendence(robot, false);
