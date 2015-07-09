@@ -35,7 +35,7 @@ module.exports = function(robot) {
 	});
 
 	robot.respond(/repl/i, function(msg) {
-		require('repl').start().context = this;
+		require('repl').start({}).context = this;
 	})
 
 	checkAttendence(robot, false);
