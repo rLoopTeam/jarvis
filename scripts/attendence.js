@@ -1,6 +1,19 @@
 var csv = require('csv-parse');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
+var Snoocore = require('snoocore');
+
+var reddit = new Snoocore({
+  userAgent: 'Jarvis by /u/ImAPyromaniac v0.1.0',
+  oauth: { 
+    type: 'script',
+    key: 'chTmUNw1Tqq2kg', 
+    secret: '0grfdCAwvJo8yEqvzB4FXZ7shEQ',
+    username: 'rLoop',
+    password: process.env.REDDIT_PASSWORD,
+    scope: [ 'privatemessages', 'read' ] 
+  }
+});
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -18,7 +31,9 @@ module.exports = function(robot) {
 	robot.respond(/[\s\S]*/, function(msg){
 		console.log(msg);
 		message.envelope.user.lastSeen = new Date().setHours(24, 0, 0, 0);
-	})
+	});
+
+	checkAttendence(robot, false);
 }
 
 function checkAttendence(robot, isTimer){
@@ -51,6 +66,18 @@ function sendWarnings(robot, user) {
 	    subject: 'Just a friendly reminder, you must visit the rLoop project once every two weeks.',
 	    text: "Hi!\n\nJust a friendy robot letting you know that it is a requirement to use Slack (rloop.slack.com) at least once every two weeks to maintain membership of the rLoop project. If you're on vacation, please just reply to this email or login to slack and let your leader know.\n\n\nThanks!\nJarvis\n\n\nP.S. If for some reason you'd like to leave, just ignore this email, and you'll automatically be removed in a week."
 	});
+
+	reddit('/api/compose').post({
+		api_type: 'json',
+		from_sr: 'rLoop',
+		to: user.name,
+		subject: 'Reminder that you must use slack once every two weeks to remain a member of the rLoop Project.',
+		text: "Hi!\n\nJust a friendy robot letting you know that it is a requirement to use [Slack](http://rloop.slack.com/) \
+at least once every two weeks to maintain membership of the rLoop project. \
+If you're on vacation, please just reply to this message or login to slack and let your leader know.\
+\n\nThanks!\n\nJarvis\n\nP.S. If for some reason you'd like to leave, just ignore this email, and you'll automatically \
+be removed in a week."
+	});
 }
 
 function killUser(robot, user) {
@@ -58,7 +85,15 @@ function killUser(robot, user) {
 		console.log("User: " + user.name + " terminated with response: ");
 		console.log(res);
 	});
-	
+
+	reddit('/api/compose').post({
+		api_type: 'json',
+		from_sr: 'rLoop',
+		to: user.name,
+		subject: 'Goodbye from the rLoop Project.',
+		text: "We're so sorry to see you go!\n\nIf you've got a minute, do you think that you could fill out our [exit survey](bit.ly/byerloop)?\n\nThanks!\nJarvis\n\n\nP.S. If you want to come back, please reply to this message."
+	});
+
 	transporter.sendMail({
 	    from: 'rLoopTeam@gmail.com',
 	    to: user.email,
