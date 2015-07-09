@@ -30,7 +30,7 @@ module.exports = function(robot) {
 	
 	robot.respond(/[\s\S]*/, function(msg){
 		console.log(msg);
-		message.envelope.user.lastSeen = new Date().setHours(24, 0, 0, 0);
+		msg.envelope.user.lastSeen = new Date().setHours(24, 0, 0, 0);
 	});
 
 	checkAttendence(robot, false);
