@@ -1,5 +1,14 @@
 var csv = require('csv-parse');
 var fs = require('fs');
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'rLoopTeam@gmail.com',
+        pass: process.env.GMAIL_PASSWORD
+    }
+});
 
 var hasStartedCheckAttendence = false;
 
@@ -36,7 +45,12 @@ function checkAttendence(robot, isTimer){
 }
 
 function sendWarnings(robot, user) {
-
+	transporter.sendMail({
+	    from: 'rLoopTeam@gmail.com',
+	    to: user.email,
+	    subject: 'Just a friendly reminder, you must visit the rLoop project once every two weeks.',
+	    text: "Hi!\n\nJust a friendy robot letting you know that it is a requirement to use Slack (rloop.slack.com) at least once every two weeks to maintain membership of the rLoop project. If you're on vacation, please just reply to this email or login to slack and let your leader know.\n\n\nThanks!\nJarvis\n\n\nP.S. If for some reason you'd like to leave, just ignore this email, and you'll automatically be removed in a week."
+	});
 }
 
 function killUser(robot, user) {
@@ -44,4 +58,18 @@ function killUser(robot, user) {
 		console.log("User: " + user.name + " terminated with response: ");
 		console.log(res);
 	});
+	
+	transporter.sendMail({
+	    from: 'rLoopTeam@gmail.com',
+	    to: user.email,
+	    subject: 'Goodbye from rLoop',
+	    text: "We're so sorry to see you go!\n\nIf you've got a minute, do you think that you could fill out our exit survey?: bit.ly/byerloop\n\nThanks!\nJarvis\n\n\nP.S. If you want to come back, please reply to this email or PM us on reddit."
+	}, function(err, info){
+	    if(err){
+	        console.log(err);
+	    }else{
+	        console.log('Message sent: ' + info.response);
+	    }
+	});
+
 }
