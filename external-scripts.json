@@ -11,8 +11,8 @@
   "hubot-shipit",
   "hubot-alias",
   "hubot-voting",
-  "hubot-business-cat",
-  "hubot-factoids",
+  "hubot-script-shellcmd",
   "hubot-seen",
-  "hubot-tell"
+  "hubot-tell",
+  "hubot-auth"
 ]
