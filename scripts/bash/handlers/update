@@ -2,6 +2,6 @@
 SELF_PATH="$( dirname "$(readlink -f "$0")" )"
 cd $SELF_PATH/../../..
 git pull origin master 2>&1 
-pm2 restart 3
+pm2 restart jarvis
 
 exit 0
