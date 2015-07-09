@@ -28,7 +28,7 @@ var hasStartedCheckAttendence = false;
 module.exports = function(robot) {
 	console.log(robot);
 	
-	robot.respond(/[\s\S]*/, function(msg){
+	robot.hear(/[\s\S]*/, function(msg){
 		console.log(msg);
 		msg.envelope.user.lastSeen = new Date().setHours(24, 0, 0, 0);
 	});
