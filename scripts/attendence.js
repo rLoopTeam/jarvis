@@ -47,9 +47,9 @@ module.exports = function(robot) {
 	});
 
 	robot.respond(/excuse @?(.*) for ([0-9].) days/i, function(msg){
-		var user = robot.brain.userForName(msg.match[0]);
+		var user = robot.brain.userForName(msg.match[1]);
 		var boss = msg.envelope.user;
-		var days = parseInt(msg.match[1]);
+		var days = parseInt(msg.match[2]);
 
 		if (!canExcuse(user)) return msg.reply('You are not premitted to excuse people');
 		if (user.id == boss.id && user.roles.indexOf('super') === -1) return msg.reply('You can not excuse yourself, please contact your manager or #hr');
@@ -61,7 +61,7 @@ module.exports = function(robot) {
 
 	robot.respond(/status (?:for|of) @?(.*)/i, function(msg){
 		console.log(msg);
-		var user = robot.brain.userForName(msg.match[0]);
+		var user = robot.brain.userForName(msg.match[1]);
 		if(!user) return msg.reply('User not found.')
 		msg.reply('@' + user.name + ' is ' + user.exemptUntil ? 'absent until ' + new Date(new Date(user.exemptUntil).setMinutes(d.getTimezoneOffset() * -1)) : 'not absent');
 	});
