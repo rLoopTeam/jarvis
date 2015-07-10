@@ -59,7 +59,7 @@ module.exports = function(robot) {
 		msg.reply('Ok. @' + user.name + ' is excused until ' + new Date(user.exemptUntil).toUTCString().replace('GMT', 'UTC') + '.\nHave a nice day!');
 	});
 
-	robot.respond(/status (?:for|of) @?(*.)/i, function(msg){
+	robot.respond(/status (?:for|of) @?(.*)/i, function(msg){
 		var user = robot.brain.getUserForName(msg.match[0]);
 		msg.reply('@' + user.name + ' is ' + user.exemptUntil ? 'absent until ' + new Date(new Date(user.exemptUntil).setMinutes(d.getTimezoneOffset() * -1)) : 'not absent');
 	});
