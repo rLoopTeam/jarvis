@@ -63,7 +63,9 @@ module.exports = function(robot) {
 		console.log(msg);
 		var user = robot.brain.userForName(msg.match[1]);
 		if(!user) return msg.reply('User not found.')
-		msg.reply('@' + user.name + ' is ' + user.exemptUntil ? 'absent until ' + new Date(new Date(user.exemptUntil).setMinutes(new Date().getTimezoneOffset() * -1)) : 'not absent');
+		var absentUntil = new Date(user.exemptUntil);
+		absentUntil.setMinutes(absentUntil.getTimezoneOffset())
+		msg.reply('@' + user.name + ' is ' + (user.exemptUntil ? 'absent until ' +  : 'not absent');
 	});
 
 	checkAttendence(robot, false);
