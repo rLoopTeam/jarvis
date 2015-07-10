@@ -25,13 +25,43 @@ var transporter = nodemailer.createTransport({
 
 var hasStartedCheckAttendence = false;
 
+var rolesAllowedToExcuse = ['lead', 'subLead', 'deptLead', 'hr', 'pm', 'apm', 'attendence', 'super'];
+
+function now(){
+	var d = new Date();
+	d.setHours(24, -1 * d.getTimezoneOffset(), 0, 0);
+	return d;
+}
+
+function canExcuse(user) {
+	return user.roles.some(function(i) { rolesAllowedToExcuse.indexOf(i) !== -1 });
+}
+
 module.exports = function(robot) {
 	console.log(robot);
 	
 	robot.hear(/[\s\S]*/, function(msg){
 		console.log(msg);
-		msg.envelope.user.lastSeen = new Date().setHours(24, 0, 0, 0);
+		msg.envelope.user.lastSeen = now();
 		console.log(msg.envelope.user);
+	});
+
+	robot.respond(/excuse @?(.*) for ([0-9].) days/i, function(msg){
+		var user = robot.brain.getUserForName(msg.match[0]);
+		var boss = msg.envelope.user;
+		var days = parseInt(msg.match[1]);
+
+		if (!canExcuse(user)) return msg.reply('You are not premitted to excuse people');
+		if (user.id == boss.id && user.roles.indexOf('super') === -1) return msg.reply('You can not excuse yourself, please contact your manager or #hr');
+		
+		user.exemptUntil = now() + (days * 24 * 60 * 60 * 1000);
+
+		msg.reply('Ok. @' + user.name + ' is excused until ' + new Date(user.exemptUntil).toUTCString().replace('GMT', 'UTC') + '.\nHave a nice day!');
+	});
+
+	robot.respond(/status (?:for|of) @?(*.)/i, function(msg){
+		var user = robot.brain.getUserForName(msg.match[0]);
+		msg.reply('@' + user.name + ' is ' + user.exemptUntil ? 'absent until ' + new Date(new Date(user.exemptUntil).setMinutes(d.getTimezoneOffset() * -1)) : 'not absent');
 	});
 
 	checkAttendence(robot, false);
@@ -41,19 +71,18 @@ function checkAttendence(robot, isTimer){
 	if (hasStartedCheckAttendence && !isTimer) return;
 
 	var users = robot.brain.users;
-	var now = new Date().setHours(24, 0, 0, 0);
 
 	for (var i = 0; i < users.length; i++) {
 		var user = users[i];
-		user.lastSeen = user.lastSeen || now;
-		if (user.exemptUntil) {
-			return;
-		} else if (user.exemptUntil.setHours(24, 0, 0, 0) === now) {
-			user.lastSeen = now;
+		user.lastSeen = user.lastSeen || now();
+		if (user.exemptUntil === now()) {
+			user.lastSeen = now();
 			user.exemptUntil = 0;
-		} else if (now - user.lastSeen > 3 * 7 * 24 * 60 * 60 * 1000) {
+		} else if (user.exemptUntil) {
+			return;
+		} else if (now() - user.lastSeen > 3 * 7 * 24 * 60 * 60 * 1000) {
 			killUser(robot, user);
-		} else if (now - user.lastSeen > 2 * 7 * 24 * 60 * 60 * 1000) {
+		} else if (now() - user.lastSeen > 2 * 7 * 24 * 60 * 60 * 1000) {
 			sendWarnings(robot, user);
 		}
 	}
