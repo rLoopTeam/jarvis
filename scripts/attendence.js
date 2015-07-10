@@ -81,7 +81,9 @@ module.exports = function(robot) {
 	});
 
 	robot.hear(/[\s\S.]*/, function(msg){
-		debug || msg.envelope.user.lastSeen = now();
+		if (debug) {
+			msg.envelope.user.lastSeen = now();
+		}
 	});
 
 	robot.respond(/status (?:for|of) @?(.*)/i, function(msg){
