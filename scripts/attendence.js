@@ -60,6 +60,7 @@ module.exports = function(robot) {
 	});
 
 	robot.respond(/status (?:for|of) @?(.*)/i, function(msg){
+		console.log(msg);
 		var user = robot.brain.userForName(msg.match[0]);
 		if(!user) return msg.reply('User not found.')
 		msg.reply('@' + user.name + ' is ' + user.exemptUntil ? 'absent until ' + new Date(new Date(user.exemptUntil).setMinutes(d.getTimezoneOffset() * -1)) : 'not absent');
