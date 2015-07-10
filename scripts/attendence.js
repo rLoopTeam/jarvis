@@ -65,7 +65,7 @@ module.exports = function(robot) {
 		if(!user) return msg.reply('User not found.')
 		var absentUntil = new Date(user.exemptUntil);
 		absentUntil.setMinutes(absentUntil.getTimezoneOffset())
-		msg.reply('@' + user.name + ' is ' + (user.exemptUntil ? 'absent until ' +  : 'not absent');
+		msg.reply('@' + user.name + ' is ' + (user.exemptUntil ? 'absent until ' + absentUntil : 'not absent');
 	});
 
 	checkAttendence(robot, false);
