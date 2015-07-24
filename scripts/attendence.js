@@ -1,5 +1,6 @@
 var csv = require('csv-parse');
 var fs = require('fs');
+var pkg = require('./../package.json');
 var nodemailer = require('nodemailer');
 var Snoocore = require('snoocore');
 var debug = process.env.DEBUG == 'true';
@@ -15,14 +16,17 @@ if(debug) {
 }
 
 var reddit = new Snoocore({
-  userAgent: 'Hubot:org.rLoop.Jarvis.Attendence:0.1.0 (by /u/ImAPyromaniac)',
+  userAgent: process.env.REDDIT_USER_AGENT || 
+  'Hubot:org.rLoop.Jarvis.Attendence:' + pkg.version + ' (by /u/ImAPyromaniac)',
   oauth: { 
     type: 'script',
-    key: 'chTmUNw1Tqq2kg', 
-    secret: '0grfdCAwvJo8yEqvzB4FXZ7shEQ',
-    username: 'rLoop',
+    key: process.env.REDDIT_KEY, 
+    secret: process.env.REDDIT_SECRET,
+    username: process.env.REDDIT_USERNAME,
     password: process.env.REDDIT_PASSWORD,
-    scope: [ 'identity', 'edit', 'flair', 'history', 'modconfig', 'modflair', 'modlog', 'modposts', 'modwiki', 'mysubreddits', 'privatemessages', 'read', 'report', 'save', 'submit', 'subscribe', 'vote', 'wikiedit', 'wikiread' ] 
+    scope: [ 'identity','edit', 'flair', 'history', 'modconfig', 'modflair',
+    'modlog', 'modposts', 'modwiki', 'mysubreddits', 'privatemessages', 'read',
+    'report', 'save', 'submit', 'subscribe', 'vote', 'wikiedit', 'wikiread' ] 
   }
 });
 
@@ -33,7 +37,7 @@ log(reddit);
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'rLoopTeam@gmail.com',
+        user: process.env.GMAIL_USERNAME,
         pass: process.env.GMAIL_PASSWORD
     }
 });
@@ -41,7 +45,8 @@ var transporter = nodemailer.createTransport({
 var hasStartedCheckAttendence = false;
 var CheckAttendenceTimer;
 
-var rolesAllowedToExcuse = ['lead', 'sublead', 'deptlead', 'hr', 'pm', 'apm', 'attendence', 'super'];
+var rolesAllowedToExcuse = ['lead', 'sublead', 'deptlead', 'hr', 'pm', 'apm',
+'attendence', 'super'];
 
 function now(){
 	var d = new Date();
@@ -66,9 +71,15 @@ module.exports = function(robot) {
 		var boss = msg.envelope.user;
 		var days = parseInt(msg.match[2]);
 
-		if (!canExcuse(boss)) return msg.reply('You are not premitted to excuse people');
-		if (user.id == boss.id && user.roles.indexOf('super') === -1) return msg.reply('You can not excuse yourself, please contact your manager or #hr');
-		
+		if (!canExcuse(boss)) {
+			return msg.reply('You are not premitted to excuse people');
+		}
+
+		if (user.id == boss.id && user.roles.indexOf('super') === -1) {
+			return msg.reply('You can not excuse yourself, please contact ' +
+				'your manager or #hr');
+		}
+
 		if (debug) {
 			user.lastSeen = now() - (days * 24 * 60 * 60 * 1000);
 			hasStartedCheckAttendence = false;
@@ -77,7 +88,9 @@ module.exports = function(robot) {
 			user.exemptUntil = now() + (days * 24 * 60 * 60 * 1000);
 		}
 
-		msg.reply('Ok. @' + user.name + ' is excused until ' + new Date(user.exemptUntil).toUTCString().replace('GMT', 'UTC') + '.\nHave a nice day!');
+		msg.reply('Ok. @' + user.name + ' is excused until ' +
+			new Date(user.exemptUntil).toUTCString().replace('GMT', 'UTC') +
+			'.\nHave a nice day!');
 	});
 
 	robot.hear(/[\s\S.]*/, function(msg){
@@ -91,7 +104,8 @@ module.exports = function(robot) {
 		if(!user) return msg.reply('User not found.')
 		var absentUntil = new Date(user.exemptUntil);
 		absentUntil.setMinutes(absentUntil.getTimezoneOffset())
-		msg.reply('@' + user.name + ' is ' + (user.exemptUntil ? 'absent until ' + absentUntil : 'not absent'));
+		msg.reply('@' + user.name + ' is ' + (user.exemptUntil ? 'absent until '
+			+ absentUntil : 'not absent'));
 	});
 
 	checkAttendence(robot, false);
@@ -117,17 +131,25 @@ function checkAttendence(robot, isTimer){
 			return sendWarnings(robot, user);
 		}
 	}
-	CheckAttendenceTimer = setTimeout(checkAttendence.bind(this, robot, true), 24 * 60 * 60 * 1000); // Run once a day
+	CheckAttendenceTimer = setTimeout(checkAttendence.bind(this, robot, true),
+	24 * 60 * 60 * 1000); // Run once a day
 }
 
 function sendWarnings(robot, user) {
-	log("Sending Warnings to: ");
+	log('Sending Warnings to: ');
 	log(user);
 	transporter.sendMail({
-	    from: 'rLoop <rLoopTeam@gmail.com>',
+	    from: 'rLoop <' + process.env.GMAIL_USERNAME + '>',
 	    to: user['email_address'],
-	    subject: 'Just a friendly reminder, you must visit the rLoop project once every two weeks.',
-	    text: "Hi!\n\nJust a friendy robot letting you know that it is a requirement to use Slack (rloop.slack.com) at least once every two weeks to maintain membership of the rLoop project. If you're on vacation, please just reply to this email or login to slack and let your leader know.\n\n\nThanks!\nJarvis\n\n\nP.S. If for some reason you'd like to leave, just ignore this email, and you'll automatically be removed in a week."
+	    subject: 'Just a friendly reminder, you must visit the rLoop project ' +
+	    'once every two weeks.',
+	    text: 'Hi!\n\nJust a friendy robot letting you know that it is a ' +
+	    'requirement to use Slack (rloop.slack.com) at least once every two ' +
+	    'weeks to maintain membership of the rLoop project. If you\'re on ' +
+	    'vacation, please just reply to this email or login to slack and let ' +
+	    'your leader know.\n\n\nThanks!\n' + process.env.NAME + '\n\n\nP.S. ' +
+	    'If for some reason you\'d like to leave, just ignore this email, and' +
+	    ' you\'ll automatically be removed in a week.'
 	}, function(error, info){
     if(error){
         log(error);
@@ -138,22 +160,26 @@ function sendWarnings(robot, user) {
 
 	reddit('/api/compose').post({
 		api_type: 'json',
-		from_sr: 'rLoop',
+		from_sr: process.env.REDDIT_SUBREDDIT,
 		to: user.name,
-		subject: 'Reminder that you must use slack once every two weeks to remain a member of the rLoop Project.',
-		text: "Hi!\n\nJust a friendy robot letting you know that it is a requirement to use [Slack](http://rloop.slack.com/) \
-at least once every two weeks to maintain membership of the rLoop project. \
-If you're on vacation, please just reply to this message or login to slack and let your leader know.\
-\n\nThanks!\n\nJarvis\n\nP.S. If for some reason you'd like to leave, just ignore this email, and you'll automatically \
-be removed in a week."
+		subject: 'Reminder that you must use slack once every two weeks to ' +
+		'remain a member of the rLoop Project.',
+		text: 'Hi!\n\nJust a friendy robot letting you know that it is a ' +
+		'requirement to use [Slack](http://rloop.slack.com/) at least once ' +
+		'every two weeks to maintain membership of the rLoop project. If ' +
+		'you\'re on vacation, please just reply to this message or login to ' +
+		'slack and let your leader know.\n\nThanks!\n\n' + process.env.NAME +
+		'\n\nP.S. If for some reason you\'d like to leave, just ignore this ' +
+		'email, and you\'ll automatically be removed in a week.'
 	});
 }
 
 function killUser(robot, user) {
-	log("Killing: ");
+	log('Killing: ');
 	log(user);
-	robot.adapter.client._apiCall('users.admin.setInactive', { user: user.id }, function(res) {
-		log("User: " + user.name + " terminated with response: ");
+	robot.adapter.client._apiCall('users.admin.setInactive', { user: user.id }, 
+	function(res) {
+		log('User: ' + user.name + ' terminated with response: ');
 		log(res);
 	});
 
@@ -162,19 +188,25 @@ function killUser(robot, user) {
 		from_sr: 'rLoop',
 		to: user.name,
 		subject: 'Goodbye from the rLoop Project.',
-		text: "We're so sorry to see you go!\n\nIf you've got a minute, do you think that you could fill out our [exit survey](bit.ly/byerloop)?\n\nThanks!\nJarvis\n\n\nP.S. If you want to come back, please reply to this message."
+		text: 'We\'re so sorry to see you go!\n\nIf you\'ve got a minute, do ' +
+		'you think that you could fill out our ' +
+		'[exit survey](bit.ly/byerloop)? \n\nThanks!\nJarvis\n\n\n' +
+		'P.S. If you want to come back, please reply to this message.'
 	}).then(function(arg){
-		log("Reddit:");
+		log('Reddit:');
 		log(arg);
 	});
 
 	// reddit('/api/v1/me').get().then(log);
 
 	transporter.sendMail({
-	    from: 'rLoopTeam@gmail.com',
+	    from: 'rLoop <' + process.env.GMAIL_USERNAME + '>',
 	    to: user['email_address'],
 	    subject: 'Goodbye from rLoop',
-	    text: "We're so sorry to see you go!\n\nIf you've got a minute, do you think that you could fill out our exit survey?: bit.ly/byerloop\n\nThanks!\nJarvis\n\n\nP.S. If you want to come back, please reply to this email or PM us on reddit."
+	    text: 'We\'re so sorry to see you go!\n\nIf you\'ve got a minute, do ' +
+	    'you think that you could fill out our exit survey?: bit.ly/byerloop' +
+	    '\n\nThanks!\n' + process.env.NAME + '\n\n\nP.S. If you want to come ' +
+	    'back, please reply to this email or PM us on reddit.'
 	}, function(err, info){
 	    if(err){
 	        log(err);
