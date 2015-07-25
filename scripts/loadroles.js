@@ -7,7 +7,6 @@ module.exports = function(robot) {
 		console.log(user);
 		console.log('\n\n\n');
 		if (!user) continue;
-		console.log(data[i].split(','));
-		user.roles = (user.roles || []).concat(data[i].split(','), ['rolesLoaded']);
+		user.roles = (user.roles || []).concat(data[i].roles.split(','), ['rolesLoaded']);
 	}
 }
