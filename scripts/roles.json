@@ -17,7 +17,7 @@
   },
   {
     "name":"ImAPyromaniac",
-    "roles":"WebDev,PR,IT,adminteamteam,subLead,lead,IT*"
+    "roles":"WebDev,PR,IT,adminteam,subLead,lead,IT*,super"
   },
   {
     "name":"KaneLSmith",
@@ -93,7 +93,7 @@
   },
   {
     "name":"-Richard",
-    "roles":"Legal,adminteam"
+    "roles":"Legal,adminteam*,adminteam,lead,deptLead,subLead"
   },
   {
     "name":"reptar",
@@ -105,7 +105,7 @@
   },
   {
     "name":"officialdanielhunter",
-    "roles":"Legal,adminteam,subLead,lead,Legal*"
+    "roles":"Legal,adminteam,subLead,lead,Legal*,apm"
   },
   {
     "name":"QuinnSelvedgeSupply",
@@ -169,7 +169,7 @@
   },
   {
     "name":"ZAROK",
-    "roles":"Comp,ENG,Aero,ENG"
+    "roles":"Comp,ENG,Aero,ENG*,lead,sublead,deptlead"
   },
   {
     "name":"ptrkueffner",
@@ -281,7 +281,7 @@
   },
   {
     "name":"beltenebros",
-    "roles":"Mech,ENG"
+    "roles":"pm,lead,deptLead,subLead,admin,pr,mfg,eng,super"
   },
   {
     "name":"adinowscar",
