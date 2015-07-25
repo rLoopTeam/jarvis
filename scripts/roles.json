@@ -17,7 +17,7 @@
   },
   {
     "name":"ImAPyromaniac",
-    "roles":"WebDev,PR,IT,Admin,subLead,lead,IT*"
+    "roles":"WebDev,PR,IT,adminteamteam,subLead,lead,IT*"
   },
   {
     "name":"KaneLSmith",
@@ -85,27 +85,27 @@
   },
   {
     "name":"jnwrd",
-    "roles":"HR,Admin,subLead,lead,HR*"
+    "roles":"HR,adminteam,subLead,lead,HR*"
   },
   {
     "name":"CRNSD",
-    "roles":"Finance,Admin"
+    "roles":"Finance,adminteam"
   },
   {
     "name":"-Richard",
-    "roles":"Legal,Admin"
+    "roles":"Legal,adminteam"
   },
   {
     "name":"reptar",
-    "roles":"HR,Admin"
+    "roles":"HR,adminteam"
   },
   {
     "name":"falkon_punch",
-    "roles":"Finance,Admin,subLead,lead,Finance*"
+    "roles":"Finance,adminteam,subLead,lead,Finance*"
   },
   {
     "name":"officialdanielhunter",
-    "roles":"Legal,Admin,subLead,lead,Legal*"
+    "roles":"Legal,adminteam,subLead,lead,Legal*"
   },
   {
     "name":"QuinnSelvedgeSupply",
