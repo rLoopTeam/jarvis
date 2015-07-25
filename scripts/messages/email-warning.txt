@@ -1,0 +1,11 @@
+Just a friendly reminder, you must visit the rLoop project once every two weeks.
+Hi!
+
+Just a friendy robot letting you know that it is a requirement to use Slack (rloop.slack.com) at least once every two weeks to maintain membership of the rLoop project. If you're on vacation, please just reply to this email or login to slack and let your leader know.
+
+
+Thanks!
+${name}
+
+
+P.S. If for some reason you'd like to leave, just ignore this email, and you'll automatically be removed in a week.
