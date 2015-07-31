@@ -1,6 +1,7 @@
 var data = require('./roles.json');
 
 module.exports = function(robot) {
+	return; // disable this.
 	setTimeout(function(){
 		for (var i = 0; i < data.length; i++) {
 			var user = robot.brain.userForName(data[i].name);
