@@ -14,5 +14,6 @@
   "hubot-script-shellcmd",
   "hubot-seen",
   "hubot-tell",
-  "hubot-auth"
+  "hubot-auth",
+  "crew-jarvis"
 ]

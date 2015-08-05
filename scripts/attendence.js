@@ -143,7 +143,7 @@ module.exports = function(robot) {
 			user.lastSeen = now() - (days * 24 * 60 * 60 * 1000);
 			user.killed = user.warned = false;
 			hasStartedCheckAttendence = false;
-			// checkAttendence(robot, true);
+			checkAttendence(robot, true);
 			log("User:");
 			log(user);
 			log("Boss:");
