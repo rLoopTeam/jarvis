@@ -33,17 +33,17 @@ function canExcuse(user) {
  * Reddit
  */
 var reddit = new Snoocore({
-  userAgent: process.env.REDDIT_USER_AGENT || 
+  userAgent: process.env.REDDIT_USER_AGENT ||
   'Hubot:org.rLoop.Jarvis.Attendence:' + pkg.version + ' (by /u/ImAPyromaniac)',
-  oauth: { 
+  oauth: {
     type: 'script',
-    key: process.env.REDDIT_KEY, 
+    key: process.env.REDDIT_KEY,
     secret: process.env.REDDIT_SECRET,
     username: process.env.REDDIT_USERNAME,
     password: process.env.REDDIT_PASSWORD,
     scope: [ 'identity','edit', 'flair', 'history', 'modconfig', 'modflair',
     'modlog', 'modposts', 'modwiki', 'mysubreddits', 'privatemessages', 'read',
-    'report', 'save', 'submit', 'subscribe', 'vote', 'wikiedit', 'wikiread' ] 
+    'report', 'save', 'submit', 'subscribe', 'vote', 'wikiedit', 'wikiread' ]
   }
 });
 reddit.auth();
@@ -63,7 +63,7 @@ var transporter = nodemailer.createTransport({
  * Message Sending
  */
 function getMessage(type, name, callback) {
-	fs.readFile(__dirname + '/messages/' + type + '-' + name + '.txt', 
+	fs.readFile(__dirname + '/messages/' + type + '-' + name + '.txt',
 		{ encoding: 'UTF-8' },
 		function (err, data){
 			if (err) return callback(err);
@@ -124,7 +124,7 @@ function sendMessages(name, user, callback) {
 module.exports = function(robot) {
 
 	log(robot);
-	
+
 	robot.respond(/excuse @?(.*) for ([0-9]*) day(:?s)?/i, function(msg){
 		var user = robot.brain.userForName(msg.match[1]);
 		var boss = msg.envelope.user;
@@ -219,11 +219,18 @@ function sendWarnings(robot, user) {
 function killUser(robot, user) {
 	log('Killing: ');
 	log(user);
-	robot.adapter.client._apiCall('users.admin.setInactive', { user: user.id }, 
-	function(res) {
-		log('User: ' + user.name + ' terminated with response: ');
-		log(res);
-	});
+  if (process.env.DELETE_USERS) {
+    robot.adapter.client._apiCall('users.admin.setInactive', { user: user.id },
+                                  function(res) {
+                                    log('User: ' +
+                                        user.name +
+                                        ' terminated with response: ');
+                                    log(res);
+                                  });
+  } else {
+    console.log('WARNING: Not removing users. If you\'d like to, please set' +
+                'DELETE_USERS to true');
+  }
 
 	sendMessages('goodbye', user, function(err) {
 		if (err) return log(err);
