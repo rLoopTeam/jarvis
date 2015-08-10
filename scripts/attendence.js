@@ -184,6 +184,7 @@ module.exports = function(robot) {
 }
 
 function checkAttendence(robot, isTimer){
+  logRobot = robot;
   log('check');
 	var users = robot.brain.users();
 
