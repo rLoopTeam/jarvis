@@ -204,6 +204,7 @@ function checkAttendence(robot, isTimer){
 			!user.warned && !user.killed) {
 			return sendWarnings(robot, user);
 		}
+    console.log(user);
 	}
 	CheckAttendenceTimer = setTimeout(checkAttendence.bind(this, robot, true),
 	24 * 60 * 60 * 1000); // Run once a day
