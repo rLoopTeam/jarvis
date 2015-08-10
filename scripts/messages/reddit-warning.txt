@@ -1,10 +1,7 @@
-Reminder that you must use slack once every two weeks to remain a member of the rLoop Project.
+rLoop misses you!
 Hi!
 
-Just a friendy robot letting you know that it is a requirement to use [Slack](http://rloop.slack.com/) at least once every two weeks to maintain membership of the rLoop project. If you're on vacation, please just reply to this message or login to slack and let your leader know.
+We noticed you haven't been on rloop.slack.com in a while. We miss you! rLoop is truly a community project - we rely on the input and collaboration of all our members to design and build our hyperloop pod. rLoop is also an inclusive project, so you will always be welcome back!
 
-Thanks!
-
+Hope to see you soon!
 ${name}
-
-P.S. If for some reason you'd like to leave, just ignore this email, and you'll automatically be removed in a week.

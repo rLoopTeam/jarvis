@@ -1,11 +1,7 @@
-Goodbye from the rLoop Project.
-We're so sorry to see you go!
+rLoop still misses you!
+Hi!
 
-If you've got a minute, do you think that you could fill out our exit survey?: bit.ly/byerloop
+It's been awhile since we've seen you at rloop.slack.com. rLoop is an inclusive project so you will always be welcome back, but if you don't intend on returning do you think you could fill out our exit survey?: bit.ly/byerloop
 
-Thanks!
-
+Hope to see you soon!
 ${name}
-
-
-P.S. If you want to come back, please reply to this email or PM us on reddit.
