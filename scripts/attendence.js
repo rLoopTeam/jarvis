@@ -10,7 +10,9 @@ var CheckAttendenceTimer;
 var rolesAllowedToExcuse = ['lead', 'sublead', 'deptlead', 'hr', 'pm', 'apm',
 	'attendence', 'super'];
 
+var logRobot;
 function log(){
+  !debug && logRobot && logRobot.send({room:'imapyromaniac'}, Array.prototype.slice.call(arguments).join('\n'));
 	return console.log.apply(this, arguments);
 }
 
