@@ -184,7 +184,6 @@ module.exports = function(robot) {
 }
 
 function checkAttendence(robot, isTimer){
-	if (hasStartedCheckAttendence && !isTimer) return;
   log('check');
 	var users = robot.brain.users();
 
