@@ -195,14 +195,13 @@ function checkAttendence(robot, isTimer){
 		if (user.exemptUntil === now()) {
 			user.lastSeen = now();
 			user.exemptUntil = 0;
-		} else if (user.exemptUntil) {
-			return;
+		} else if (user.exemptUntil) { // noop
 		} else if (now() - user.lastSeen >= 3 * 7 * 24 * 60 * 60 * 1000 &&
 			!user.killed) {
-			return killUser(robot, user);
+      killUser(robot, user);
 		} else if (now() - user.lastSeen >= 2 * 7 * 24 * 60 * 60 * 1000 &&
 			!user.warned && !user.killed) {
-			return sendWarnings(robot, user);
+      sendWarnings(robot, user);
 		}
     console.log(user);
 	}
