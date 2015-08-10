@@ -113,6 +113,8 @@ function sendEmail(name, to, callback) {
 }
 
 function sendMessages(name, user, callback) {
+  log('sending message: ');
+  log(arguments);
 	sendEmail(name, user['email_address'], function(err) {
 		if (err) return callback(err);
 		sendRedditMessage(name, user.name, function(err) {
@@ -124,8 +126,6 @@ function sendMessages(name, user, callback) {
 
 
 module.exports = function(robot) {
-
-	log(robot);
 
 	robot.respond(/excuse @?(.*) for ([0-9]*) day(:?s)?/i, function(msg){
 		var user = robot.brain.userForName(msg.match[1]);
@@ -185,7 +185,7 @@ module.exports = function(robot) {
 
 function checkAttendence(robot, isTimer){
 	if (hasStartedCheckAttendence && !isTimer) return;
-
+  log('check');
 	var users = robot.brain.users();
 
 	// log(users);
