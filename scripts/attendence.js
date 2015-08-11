@@ -210,7 +210,6 @@ function checkAttendence(robot, isTimer) {
   // log(users);
   for (var id in users) {
     var user = users[id];
-    log(user.lastSeen);
     user.lastSeen = user.lastSeen || now();
     if (user.exemptUntil === now()) {
       user.lastSeen = now();
@@ -238,7 +237,6 @@ function checkAttendence(robot, isTimer) {
                !user.killed) {
       sendWarnings(robot, user);
     }
-    log(user);
   }
   CheckAttendenceTimer = setTimeout(checkAttendence.bind(this, robot, true),
                                     24 * 60 * 60 * 1000); // Run once a day
