@@ -6,7 +6,7 @@
   "description": "Robot Overlord",
   "dependencies": {
     "csv-parse": "^0.1.3",
-    "hubot": "^2.13.2",
+    "hubot": "^2.15.0",
     "hubot-alias": "^0.1.7",
     "hubot-auth": "^1.2.0",
     "hubot-business-cat": "^1.2.2",
