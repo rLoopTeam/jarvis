@@ -15,7 +15,10 @@ function log() {
   !debug &&
   logRobot &&
   logRobot.send({ room: 'imapyromaniac' },
-    Array.prototype.slice.call(arguments).join('\n'));
+    Array.prototype.slice.call(arguments).map(function(a) {
+      if (typeof a !== 'string') return JSON.stringify(a, 2);
+      else return a;
+    }).join('\n'));
   return console.log.apply(this, arguments);
 }
 
