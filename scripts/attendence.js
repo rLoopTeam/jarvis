@@ -220,7 +220,6 @@ function checkAttendence(robot, isTimer) {
     for (var id in users) {
       var user = users[id];
       user.lastSeen = user.lastSeen || now();
-      user.warned = user.killed = false;
       if (user.exemptUntil === now()) {
         user.lastSeen = now();
         user.exemptUntil = null;
