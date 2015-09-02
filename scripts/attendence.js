@@ -206,44 +206,46 @@ module.exports = function(robot) {
 };
 
 function checkAttendence(robot, isTimer) {
-  logRobot = robot;
-  log('check');
-  var users = robot.brain.users();
+  setTimeout(function(){
+    logRobot = robot;
+    log('check');
+    var users = robot.brain.users();
 
-  // log(users);
-  for (var id in users) {
-    var user = users[id];
-    user.lastSeen = user.lastSeen || now();
-    user.warned = user.killed = false;
-    if (user.exemptUntil === now()) {
-      user.lastSeen = now();
-      user.exemptUntil = null;
-    } else if (user.exemptUntil) { // noop
-    } else if (now() -
-               user.lastSeen >=
-               3 *
-               7 *
-               24 *
-               60 *
-               60 *
-               1000 &&
-               !user.killed) {
-      killUser(robot, user);
-    } else if (now() -
-               user.lastSeen >=
-               2 *
-               7 *
-               24 *
-               60 *
-               60 *
-               1000 &&
-               !user.warned &&
-               !user.killed) {
-      sendWarnings(robot, user);
+    log(users);
+    for (var id in users) {
+      var user = users[id];
+      user.lastSeen = user.lastSeen || now();
+      user.warned = user.killed = false;
+      if (user.exemptUntil === now()) {
+        user.lastSeen = now();
+        user.exemptUntil = null;
+      } else if (user.exemptUntil) { // noop
+      } else if (now() -
+                 user.lastSeen >=
+                 3 *
+                 7 *
+                 24 *
+                 60 *
+                 60 *
+                 1000 &&
+                 !user.killed) {
+        killUser(robot, user);
+      } else if (now() -
+                 user.lastSeen >=
+                 2 *
+                 7 *
+                 24 *
+                 60 *
+                 60 *
+                 1000 &&
+                 !user.warned &&
+                 !user.killed) {
+        sendWarnings(robot, user);
+      }
     }
-  }
-  CheckAttendenceTimer = setTimeout(checkAttendence.bind(this, robot, true),
-                                    24 * 60 * 60 * 1000); // Run once a day
+    CheckAttendenceTimer = setTimeout(checkAttendence.bind(this, robot, true),
+                                      24 * 60 * 60 * 1000); // Run once a day
+  }, 10000);
 }
 
 function sendWarnings(robot, user) {
