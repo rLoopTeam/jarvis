@@ -2,7 +2,7 @@ var csv = require('csv-parse');
 var fs = require('fs');
 var pkg = require('./../package.json');
 var nodemailer = require('nodemailer');
-var mg = require('nodemailer-mailgun-transport');
+var smtp = require('nodemailer-smtp-transport');
 var Snoocore = require('snoocore');
 var debug = process.env.NODE_ENV == 'development';
 
@@ -78,14 +78,16 @@ reddit.auth();
 /*
  * Email
  */
-var mgAuth = {
+var smtpAuth = {
+  host: process.env.STMP_HOST,
+  port: process.env.STMP_PORT,
   auth: {
-    user: process.env.MAILGUN_API_KEY,
-    domain: process.env.MAILGUN_DOMAIN,
+    user: process.env.STMP_USER,
+    pass: process.env.STMP_PASSWORD,
   }
 };
-setTimeout(function() { log(mgAuth); }, 20000);
-var transporter = nodemailer.createTransport(mg(mgAuth));
+setTimeout(function() { log(smtpAuth); }, 20000);
+var transporter = nodemailer.createTransport(smtp(smtpAuth));
 
 /*
  * Message Sending
