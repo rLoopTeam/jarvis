@@ -14,7 +14,7 @@ var logRobot;
 function log() {
   !debug &&
   logRobot &&
-  logRobot.send({ room: 'imapyromaniac' },
+  logRobot.send({ room: 'jarvis-logs' },
     Array.prototype.slice.call(arguments).map(function(a) {
       if (typeof a !== 'string') return JSON.stringify(a, 2);
       else return a;
