@@ -2,6 +2,7 @@ var csv = require('csv-parse');
 var fs = require('fs');
 var pkg = require('./../package.json');
 var nodemailer = require('nodemailer');
+var mg = require('nodemailer-mailgun-transport');
 var Snoocore = require('snoocore');
 var debug = process.env.NODE_ENV == 'development';
 
@@ -77,13 +78,12 @@ reddit.auth();
 /*
  * Email
  */
-var transporter = nodemailer.createTransport({
-  service: 'gmail',
+var transporter = nodemailer.createTransport(mg({
   auth: {
-    user: process.env.GMAIL_USERNAME,
-    pass: process.env.GMAIL_PASSWORD
+    user: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN,
   }
-});
+}));
 
 /*
  * Message Sending
@@ -123,7 +123,8 @@ function sendEmail(name, to, callback) {
   getMessage('email', name, function(err, msg) {
     if (err) callback(err);
     transporter.sendMail({
-      from: 'rLoop <' + process.env.GMAIL_USERNAME + '>',
+      from: 'Jarvis <' + process.env.EMAIL_ADDRESS + '>',
+      replyTo: process.env.REPLY_TO,
       to: to,
       subject: msg.subject,
       text: msg.text
