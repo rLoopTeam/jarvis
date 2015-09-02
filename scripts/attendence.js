@@ -217,8 +217,11 @@ function checkAttendence(robot, isTimer) {
     var users = robot.brain.users();
 
     log(users);
-    for (var id in users) {
-      var user = users[id];
+    var usersToDo = [];
+    for (var id in users) usersToDo.unshift(users[id]);
+
+    function doUser(){
+      var user = usersToDo.pop();
       user.lastSeen = user.lastSeen || now();
       if (user.exemptUntil === now()) {
         user.lastSeen = now();
@@ -246,7 +249,11 @@ function checkAttendence(robot, isTimer) {
                  !user.killed) {
         sendWarnings(robot, user);
       }
+      if(usersToDo.length !== 0) setTimeout(doUser, 1000);
     }
+
+    doUser();
+
     CheckAttendenceTimer = setTimeout(checkAttendence.bind(this, robot, true),
                                       24 * 60 * 60 * 1000); // Run once a day
   }, 10000);
