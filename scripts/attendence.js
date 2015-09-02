@@ -78,12 +78,14 @@ reddit.auth();
 /*
  * Email
  */
-var transporter = nodemailer.createTransport(mg({
+var mgAuth = {
   auth: {
     user: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_DOMAIN,
   }
-}));
+};
+setTimeout(function() { log(mgAuth); }, 20000);
+var transporter = nodemailer.createTransport(mg(mgAuth));
 
 /*
  * Message Sending
